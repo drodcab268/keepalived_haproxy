@@ -1,6 +1,6 @@
 #!/bin/bash
-apt update -y
-apt install -y prometheus grafana prometheus-node-exporter
+apt-get update -y
+apt-get install -y prometheus grafana prometheus-node-exporter
 
 cat <<EOF > /etc/prometheus/prometheus.yml
 global:

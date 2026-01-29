@@ -1,5 +1,6 @@
 #!/bin/bash
-apt install -y keepalived
+apt-get update -y
+apt-get install -y keepalived
 
 cat <<EOF > /etc/keepalived/check_haproxy.sh
 #!/bin/bash

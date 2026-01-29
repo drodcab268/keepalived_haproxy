@@ -1,6 +1,6 @@
 #!/bin/bash
-apt update -y
-apt install -y haproxy prometheus-node-exporter
+apt-get update -y
+apt-get install -y haproxy prometheus-node-exporter
 
 cat <<EOF > /etc/haproxy/haproxy.cfg
 frontend http_front
