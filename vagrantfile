@@ -1,0 +1,50 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/jammy64"
+
+  # =========================
+  # HAProxy + Keepalived MASTER
+  # =========================
+  config.vm.define "haproxy1" do |h1|
+    h1.vm.hostname = "haproxy-master"
+    h1.vm.network "private_network", ip: "192.168.56.10"
+    h1.vm.provision "shell", path: "provision/haproxy.sh"
+    h1.vm.provision "shell", path: "provision/keepalived-master.sh"
+  end
+
+  # =========================
+  # HAProxy + Keepalived BACKUP
+  # =========================
+  config.vm.define "haproxy2" do |h2|
+    h2.vm.hostname = "haproxy-backup"
+    h2.vm.network "private_network", ip: "192.168.56.11"
+    h2.vm.provision "shell", path: "provision/haproxy.sh"
+    h2.vm.provision "shell", path: "provision/keepalived-backup.sh"
+  end
+
+  # =========================
+  # WEB SERVER 1
+  # =========================
+  config.vm.define "web1" do |w1|
+    w1.vm.hostname = "web1"
+    w1.vm.network "private_network", ip: "192.168.56.20"
+    w1.vm.provision "shell", path: "provision/web.sh", args: ["WEB SERVER 1"]
+  end
+
+  # =========================
+  # WEB SERVER 2
+  # =========================
+  config.vm.define "web2" do |w2|
+    w2.vm.hostname = "web2"
+    w2.vm.network "private_network", ip: "192.168.56.21"
+    w2.vm.provision "shell", path: "provision/web.sh", args: ["WEB SERVER 2"]
+  end
+
+  # =========================
+  # MONITOR (Prometheus + Grafana)
+  # =========================
+  config.vm.define "monitor" do |m|
+    m.vm.hostname = "monitor"
+    m.vm.network "private_network", ip: "192.168.56.30"
+    m.vm.provision "shell", path: "provision/monitor.sh"
+  end
+end
