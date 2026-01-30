@@ -1,10 +1,25 @@
+# coding: utf-8
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
 Vagrant.configure("2") do |config|
   config.vm.box = "debian/bookworm64"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
+    vb.linked_clone = true
+  end
+
 
   # =========================
   # HAProxy + Keepalived MASTER
   # =========================
   config.vm.define "haproxy1" do |h1|
+    h1.vm.provider "virtualbox" do |vb|
+      vb.name = "haproxy1"
+      vb.memory = "512"
+    end
+
     h1.vm.hostname = "haproxy-master"
     h1.vm.network "private_network", ip: "192.168.56.10"
     h1.vm.provision "shell", path: "provision/haproxy.sh"
@@ -15,6 +30,11 @@ Vagrant.configure("2") do |config|
   # HAProxy + Keepalived BACKUP
   # =========================
   config.vm.define "haproxy2" do |h2|
+    h2.vm.provider "virtualbox" do |vb|
+      vb.name = "haproxy2"
+      vb.memory = "512"
+    end
+
     h2.vm.hostname = "haproxy-backup"
     h2.vm.network "private_network", ip: "192.168.56.11"
     h2.vm.provision "shell", path: "provision/haproxy.sh"
@@ -25,6 +45,11 @@ Vagrant.configure("2") do |config|
   # WEB SERVER 1
   # =========================
   config.vm.define "web1" do |w1|
+    w1.vm.provider "virtualbox" do |vb|
+      vb.name = "web1"
+      vb.memory = "512"
+    end
+
     w1.vm.hostname = "web1"
     w1.vm.network "private_network", ip: "192.168.56.20"
     w1.vm.provision "shell", path: "provision/web.sh", args: ["WEB SERVER 1"]
@@ -34,6 +59,11 @@ Vagrant.configure("2") do |config|
   # WEB SERVER 2
   # =========================
   config.vm.define "web2" do |w2|
+    w2.vm.provider "virtualbox" do |vb|
+      vb.name = "web2"
+      vb.memory = "512"
+    end
+
     w2.vm.hostname = "web2"
     w2.vm.network "private_network", ip: "192.168.56.21"
     w2.vm.provision "shell", path: "provision/web.sh", args: ["WEB SERVER 2"]
@@ -43,6 +73,11 @@ Vagrant.configure("2") do |config|
   # MONITOR (Prometheus + Grafana)
   # =========================
   config.vm.define "monitor" do |m|
+    m.vm.provider "virtualbox" do |vb|
+      vb.name = "monitor"
+      vb.memory = "512"
+    end
+
     m.vm.hostname = "monitor"
     m.vm.network "private_network", ip: "192.168.56.30"
     m.vm.provision "shell", path: "provision/monitor.sh"

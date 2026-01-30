@@ -1,7 +1,21 @@
 #!/bin/bash
 apt-get update -y
-apt-get install -y prometheus grafana prometheus-node-exporter
+apt-get install -y wget curl gnupg prometheus prometheus-node-exporter
 
+# =========================
+# Añadir repositorio Grafana
+# =========================
+wget -q -O - https://packages.grafana.com/gpg.key | gpg --dearmor | tee /usr/share/keyrings/grafana.gpg > /dev/null
+
+echo "deb [signed-by=/usr/share/keyrings/grafana.gpg] https://packages.grafana.com/oss/deb stable main" \
+> /etc/apt/sources.list.d/grafana.list
+
+apt update -y
+apt install -y grafana
+
+# =========================
+# Config Prometheus
+# =========================
 cat <<EOF > /etc/prometheus/prometheus.yml
 global:
   scrape_interval: 5s
@@ -18,5 +32,6 @@ EOF
 
 systemctl restart prometheus
 systemctl enable prometheus
+
 systemctl enable grafana-server
 systemctl start grafana-server
